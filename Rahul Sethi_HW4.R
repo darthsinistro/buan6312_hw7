@@ -17,6 +17,45 @@ for(i in 1:4){
     outp[i,1] <- samsize[i]
     outp[i,2] <- model$coefficients[1]
     outp[i,3] <- model$coefficients[2]
-    abline(outp[i,2],outp[i,3],col=c("orange","maroon","cyan","green")[i])
+    abline(outp[i,2],outp[i,3],col=gray((1:4)/4)[i])
 }
 
+cor(ivreg2)
+
+lmf <- lm(x~z1, data=ivreg2)
+lmg <- lm(x~z2, data=ivreg2)
+lmh <- lm(x~z1 + z2, data=ivreg2)
+
+ivreg2$x_z1 <- predict(lmf)
+ivreg2$x_z2 <- predict(lmg)
+ivreg2$x_z12 <- predict(lmh)
+
+outp <- matrix(rep(NA,12),nrow=4,ncol=3)
+for(i in 1:4){
+    model <- lm(y~x_z1, data=ivreg2[1:samsize[i],])
+    outp[i,1] <- samsize[i]
+    outp[i,2] <- model$coefficients[1]
+    outp[i,3] <- model$coefficients[2]
+    # abline(outp[i,2],outp[i,3],col=gray((1:4)/4)[i])
+    if(i==4) print(outp)
+}
+
+outp <- matrix(rep(NA,12),nrow=4,ncol=3)
+for(i in 1:4){
+    model <- lm(y~x_z2, data=ivreg2[1:samsize[i],])
+    outp[i,1] <- samsize[i]
+    outp[i,2] <- model$coefficients[1]
+    outp[i,3] <- model$coefficients[2]
+    # abline(outp[i,2],outp[i,3],col=gray((1:4)/4)[i])
+    if(i==4) print(outp)
+}
+
+outp <- matrix(rep(NA,12),nrow=4,ncol=3)
+for(i in 1:4){
+    model <- lm(y~x_z12, data=ivreg2[1:samsize[i],])
+    outp[i,1] <- samsize[i]
+    outp[i,2] <- model$coefficients[1]
+    outp[i,3] <- model$coefficients[2]
+    # abline(outp[i,2],outp[i,3],col=gray((1:4)/4)[i])
+    if(i==4) print(outp)
+}
